@@ -50,3 +50,20 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")  # Set in Render dashboard
 app = Application.builder().token(TELEGRAM_TOKEN).build()
 app.add_handler(MessageHandler(filters.PHOTO, classify_image))
 app.run_polling()
+
+import http.server
+import threading
+
+# Dummy HTTP server to satisfy Render's port requirement
+def run_dummy_server():
+    server = http.server.HTTPServer(('0.0.0.0', 10000), http.server.SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+# Start the dummy server in a separate thread
+threading.Thread(target=run_dummy_server, daemon=True).start()
+
+# Start your bot (keep your existing code)
+if __name__ == '__main__':
+    print("Bot is running...")
+    app.run_polling()
+    
